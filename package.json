@@ -1,0 +1,17 @@
+{
+  "name": "devarsh-music",
+  "private": true,
+  "workspaces": [
+    "frontend/",
+    "backend/"
+  ],
+  "scripts": {
+    "start": "bun run --cwd frontend build; bun run --cwd backend start",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.6"
+  }
+}
