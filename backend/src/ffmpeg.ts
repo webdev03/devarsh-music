@@ -28,7 +28,7 @@ export async function transcode(id: string) {
   await rename(file, file + ".tmp");
 
   const process = Bun.spawn({
-    cmd: ["ffmpeg", "-i", file + ".tmp", "-c:a", "aac", "-b:a", "128k", "audio.mp4"],
+    cmd: ["ffmpeg", "-i", file + ".tmp", "-c:a", "aac", "-b:a", "128k", path.join(DATA_DIR, "songs", id, "audio.mp4")],
     stdout: "inherit"
   });
 
