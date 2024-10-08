@@ -34,6 +34,8 @@ export async function transcode(id: string) {
       "ffmpeg",
       "-i",
       file + ".tmp",
+      "-af",
+      "loudnorm=I=-14:TP=-1.5:LRA=11",
       "-codec:a",
       "libmp3lame",
       "-qscale:a",
