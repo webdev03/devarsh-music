@@ -74,6 +74,7 @@ app.post("/api/transcode/:id", async (c) => {
   const songId = c.req.param("id");
   if (!songId || songId.includes("/") || songId.length < 3) return c.text("Invalid ID", 400);
   await transcode(songId);
+  return c.text("Transcoded");
 });
 
 app.delete("/api/songs/:id", async (c) => {
