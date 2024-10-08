@@ -3,6 +3,7 @@ const startTime = Date.now();
 import { DATA_DIR, password } from "./data";
 import { songs } from "./songs";
 import { download } from "./yt-dlp";
+import { transcode } from "./ffmpeg";
 
 import { Hono } from "hono";
 import { serveStatic } from "hono/bun";
@@ -67,6 +68,12 @@ app.get("/api/playback/:id", async (c) => {
     console.error(err);
     return c.text("Error while streaming the file", 500);
   }
+});
+
+app.post("/api/transcode/:id", async (c) => {
+  const songId = c.req.param("id");
+  if (!songId || songId.includes("/") || songId.length < 3) return c.text("Invalid ID", 400);
+  await transcode(songId);
 });
 
 app.delete("/api/songs/:id", async (c) => {
