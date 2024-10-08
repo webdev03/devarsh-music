@@ -18,7 +18,7 @@ if (!Bun.which("ffmpeg")) {
 }
 
 /**
- * Transcodes an audio file
+ * Transcodes an audio file, for maximum compatibility use mp3
  * https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs#example_music_for_streaming may be useful
  * @param id The ID of the song
  */
@@ -28,7 +28,18 @@ export async function transcode(id: string) {
   await rename(file, file + ".tmp");
 
   const process = Bun.spawn({
-    cmd: ["ffmpeg", "-i", file + ".tmp", "-c:a", "aac", "-b:a", "128k", path.join(DATA_DIR, "songs", id, "audio.mp4")],
+    // If your clients support AAC in mp4 container
+    // cmd: ["ffmpeg", "-i", file + ".tmp", "-c:a", "aac", "-b:a", "128k", path.join(DATA_DIR, "songs", id, "audio.mp4")],
+    cmd: [
+      "ffmpeg",
+      "-i",
+      file + ".tmp",
+      "-codec:a",
+      "libmp3lame",
+      "-qscale:a",
+      "1",
+      path.join(DATA_DIR, "songs", id, "audio.mp3")
+    ],
     stdout: "inherit"
   });
 
