@@ -97,7 +97,7 @@ app.post("/api/yt-dlp", async (c) => {
 
 app.post("/api/password", async (c) => {
   const newPassword = (await c.req.text()).trim();
-  if(newPassword.length < 1) return c.text("Password cannot be empty", 400);
+  if (newPassword.length < 1) return c.text("Password cannot be empty", 400);
   await password.set(newPassword);
   return c.text("Done!");
 });
@@ -116,4 +116,7 @@ app.use(
   })
 );
 
-export default app;
+export default {
+  port: process.env.DEVARSH_MUSIC_PORT || 3000,
+  fetch: app.fetch
+};
