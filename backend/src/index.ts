@@ -95,6 +95,13 @@ app.post("/api/yt-dlp", async (c) => {
   });
 });
 
+app.post("/api/password", async (c) => {
+  const newPassword = (await c.req.text()).trim();
+  if(newPassword.length < 1) return c.text("Password cannot be empty", 400);
+  await password.set(newPassword);
+  return c.text("Done!");
+});
+
 app.get("/api/health", (c) =>
   c.json({
     uptime: Number(((Date.now() - startTime) / 1000).toFixed(2))
