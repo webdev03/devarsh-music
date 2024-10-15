@@ -1,6 +1,7 @@
 import * as path from "path";
 import { writeFile } from "fs/promises";
 
+import { transcode } from "./ffmpeg";
 import { generateId } from "./songs";
 import { DATA_DIR } from "./data";
 
@@ -44,6 +45,8 @@ export async function download(url: string, title: string = url) {
       year: new Date().getFullYear()
     })
   );
+
+  await transcode(id);
 
   return id;
 }
