@@ -6,7 +6,8 @@
     "backend/"
   ],
   "scripts": {
-    "start": "bun run --cwd frontend build; bun run --cwd backend start",
+    "build": "bun run --cwd frontend build",
+    "start": "bun run --cwd backend start",
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
