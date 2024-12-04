@@ -35,7 +35,13 @@ RUN bun run build
 
 # Final release image
 FROM base AS release
+# Copy root node_modules
 COPY --from=install-prod /temp/prod/node_modules node_modules
+
+# Create directories
+RUN mkdir -p frontend/node_modules backend/node_modules
+
+# Copy workspace node_modules
 COPY --from=install-prod /temp/prod/frontend/node_modules frontend/node_modules
 COPY --from=install-prod /temp/prod/backend/node_modules backend/node_modules
 
