@@ -1,38 +1,48 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
+# Use the official Bun image
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
 
-# install dependencies into temp directory
-# this will cache them and speed up future builds
+# Install dependencies into temp directory
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
+COPY frontend/package.json /temp/dev/frontend/
+COPY backend/package.json /temp/dev/backend/
 
-# install with --production (exclude devDependencies)
+WORKDIR /temp/dev
+RUN bun install --frozen-lockfile
+
+# Install with --production (exclude devDependencies)
+FROM base AS install-prod
 RUN mkdir -p /temp/prod
 COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
+COPY frontend/package.json /temp/prod/frontend/
+COPY backend/package.json /temp/prod/backend/
 
-# copy node_modules from temp directory
-# then copy all (non-ignored) project files into the image
+WORKDIR /temp/prod
+RUN bun install --frozen-lockfile --production
+
+# Copy node_modules and project files
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
+COPY --from=install /temp/dev/frontend/node_modules frontend/node_modules
+COPY --from=install /temp/dev/backend/node_modules backend/node_modules
 COPY . .
 
-# [optional] tests & build
+# Build stage
 ENV NODE_ENV=production
 RUN bun run build
 
-# copy production dependencies and source code into final image
+# Final release image
 FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/backend .
-COPY --from=prerelease /usr/src/app/frontend/dist .
+COPY --from=install-prod /temp/prod/node_modules node_modules
+COPY --from=install-prod /temp/prod/frontend/node_modules frontend/node_modules
+COPY --from=install-prod /temp/prod/backend/node_modules backend/node_modules
+
+COPY --from=prerelease /usr/src/app/backend ./backend
+COPY --from=prerelease /usr/src/app/frontend/dist ./frontend/dist
 COPY --from=prerelease /usr/src/app/package.json .
 
-# run the app
 USER bun
-EXPOSE 3000/tcp
+EXPOSE 3000
 ENTRYPOINT [ "bun", "run", "backend/src/index.ts" ]
