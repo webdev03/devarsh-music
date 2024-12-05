@@ -39,7 +39,13 @@ COPY --from=prerelease /usr/src/app/package.json .
 RUN apt-get update -qq && apt-get install ffmpeg -y
 
 # yt-dlp
-RUN apt-get install curl -y && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && chmod a+rx ~/.local/bin/yt-dlp
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+    python3.12 \
+    python3-pip \
+    && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+RUN python3 -m pip install -U "yt-dlp[default]"
 
 # run the app
 # not reccomended to run as root, please run as bun
