@@ -38,6 +38,9 @@ COPY --from=prerelease /usr/src/app/package.json .
 # ffmpeg
 RUN apt-get update -qq && apt-get install ffmpeg -y
 
+# yt-dlp
+RUN add-apt-repository ppa:tomtomtom/yt-dlp && apt-get update -qq && apt-get install yt-dlp -y
+
 # run the app
 # not reccomended to run as root, please run as bun
 USER root 
