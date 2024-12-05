@@ -36,6 +36,7 @@ COPY --from=prerelease /usr/src/app/frontend ./frontend
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
-USER root
+# not reccomended to run as root, copy music data
+USER root 
 EXPOSE 3000/tcp
 ENTRYPOINT [ "bun", "run", "backend/src/index.ts" ]
