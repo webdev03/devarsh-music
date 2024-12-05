@@ -35,9 +35,6 @@ COPY --from=prerelease /usr/src/app/backend ./backend
 COPY --from=prerelease /usr/src/app/frontend ./frontend
 COPY --from=prerelease /usr/src/app/package.json .
 
-# ffmpeg
-RUN apt-get update -qq && apt-get install ffmpeg -y
-
 # run the app
 # not reccomended to run as root, please run as bun
 USER root 
