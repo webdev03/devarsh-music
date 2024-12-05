@@ -8,6 +8,7 @@
   "scripts": {
     "build": "bun run build --workspaces",
     "dev": "bun run dev --workspaces",
+    "start": "bun run start --workspaces",
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
