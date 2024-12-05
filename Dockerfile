@@ -43,7 +43,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # yt-dlp
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp \
