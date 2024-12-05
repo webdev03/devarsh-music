@@ -46,6 +46,9 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# python
+RUN apt-get update -qq && apt-get install python3 -y
+
 # yt-dlp
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp \
     && chmod a+rx /usr/local/bin/yt-dlp
