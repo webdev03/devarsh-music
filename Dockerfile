@@ -4,15 +4,12 @@ FROM oven/bun:1
 # Set working directory
 WORKDIR /app
 
-# Copy root-level files
+# Copy package.json files
 COPY package.json bun.lockb ./
+COPY backend/package.json ./backend
+COPY frontend/package.json ./frontend
 
-# Copy workspace directories
-COPY backend ./backend
-COPY frontend ./frontend
-
-# Debug: Verify directory structure
-RUN ls -la && ls -la frontend && ls -la backend
+RUN ls -la frontend 
 
 # Install dependencies
 RUN bun install --frozen-lockfile
@@ -24,5 +21,5 @@ COPY . .
 ENV NODE_ENV=production
 RUN bun run build
 
-# Set the entrypoint to run the backend
+# Set the entrypoint to run pkg-a
 CMD ["bun", "run", "backend/src/index.ts"]
