@@ -9,18 +9,14 @@ if (!Bun.which("yt-dlp")) {
   console.warn(
     "[WARN] yt-dlp was not found! Some features WILL NOT WORK without yt-dlp! Please read the README in the devarsh-music repository to learn how to fix this!"
   );
-} else {
-  const result = Bun.spawnSync({
-    cmd: ["yt-dlp", "--version"],
-  });
-  
-  if (result.success === false) {
-    console.error("Command failed to execute!");
-    console.error(new TextDecoder().decode(result.stderr)); // Log the error
-  } else {
-    console.log("Command executed successfully!");
-    console.log(new TextDecoder().decode(result.stdout)); // Log the output
-  }
+} else if (
+  Bun.spawnSync({
+    cmd: ["yt-dlp", "--version"]
+  }).success === false
+) {
+  console.warn(
+    "[WARN] We tested your installation for yt-dlp, and while yt-dlp was found, it did not start properly! Some features WILL NOT WORK without yt-dlp! Please ask for support!!!"
+  );
 }
 
 /**
