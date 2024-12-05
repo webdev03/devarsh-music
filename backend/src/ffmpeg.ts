@@ -9,7 +9,7 @@ if (!Bun.which("ffmpeg")) {
   );
 } else if (
   Bun.spawnSync({
-    cmd: ["ffmpeg", "--version"]
+    cmd: ["ffmpeg", "-version"]
   }).success === false
 ) {
   console.warn(
