@@ -23,7 +23,7 @@ RUN cd /temp/prod && bun install --frozen-lockfile --production
 FROM base AS prerelease
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
-RUN ls -la
+
 # build
 ENV NODE_ENV=production
 RUN bun run build
@@ -34,6 +34,7 @@ COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/backend .
 COPY --from=prerelease /usr/src/app/frontend .
 COPY --from=prerelease /usr/src/app/package.json .
+RUN ls -la
 
 # run the app
 USER bun
