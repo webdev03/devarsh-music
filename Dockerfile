@@ -5,9 +5,9 @@ WORKDIR /usr/src/app
 # Stage for installing dependencies
 FROM base AS install
 RUN mkdir -p /temp/dev
-COPY bun.lockb package.json  /temp/dev/
-COPY backend/package.json  /temp/dev/backend/
-COPY frontend/package.json  /temp/dev/frontend/
+COPY bun.lockb package.json /temp/dev/
+COPY backend/package.json /temp/dev/backend/
+COPY frontend/package.json /temp/dev/frontend/
 
 # Install dependencies for the entire workspace
 RUN cd /temp/dev && bun install --frozen-lockfile
@@ -15,9 +15,9 @@ RUN cd /temp/dev && bun install --frozen-lockfile
 # Production dependencies stage
 FROM base AS production-deps
 RUN mkdir -p /temp/prod
-COPY bun.lockb package.json ./
-COPY backend/package.json ./backend/
-COPY frontend/package.json ./frontend/
+COPY bun.lockb package.json /temp/prod
+COPY backend/package.json /temp/prod/backend/
+COPY frontend/package.json /temp/prod/frontend/
 
 # Install only production dependencies
 RUN cd /temp/prod && bun install --frozen-lockfile --production
