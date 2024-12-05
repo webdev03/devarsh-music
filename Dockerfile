@@ -34,6 +34,7 @@ FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/backend ./backend
 COPY --from=prerelease /usr/src/app/frontend ./frontend
+COPY --from=prerelease /usr/src/app/music-data ./music-data
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
