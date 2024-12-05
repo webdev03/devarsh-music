@@ -31,11 +31,9 @@ RUN bun run build
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY --from=prerelease /usr/src/app/backend .
-COPY --from=prerelease /usr/src/app/frontend/dist .
+COPY --from=prerelease /usr/src/app/frontend .
 
-# Expose the port your app runs on
-EXPOSE 3000
-
-# Run the backend
+# run the app
 USER bun
-ENTRYPOINT ["bun", "run", "backend/src/index.ts"]
+EXPOSE 3000/tcp
+ENTRYPOINT [ "bun", "run", "backend/src/index.ts" ]
