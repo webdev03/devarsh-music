@@ -112,7 +112,7 @@ app.get("/about", (c) => c.text("Devarsh's Music Player. Thanks for using my sof
 
 app.use(
   serveStatic({
-    root: "./frontend/dist"
+    root: "../frontend/dist"
   })
 );
 

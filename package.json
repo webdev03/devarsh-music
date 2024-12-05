@@ -8,7 +8,7 @@
   "scripts": {
     "build": "bun run --cwd frontend build",
     "dev": "bun run --cwd backend dev; bun run --cwd frontend dev",
-    "start": "bun run backend/src/index.ts",
+    "start": "bun run --cwd backend start",
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },

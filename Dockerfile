@@ -57,4 +57,4 @@ RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o 
 # not reccomended to run as root, please run as bun
 USER root 
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "backend/src/index.ts" ]
+ENTRYPOINT [ "bun", "run", "--cwd", "backend", "start" ]
