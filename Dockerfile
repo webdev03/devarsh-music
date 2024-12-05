@@ -1,25 +1,52 @@
 # Use the official Bun image
-FROM oven/bun:1
+FROM oven/bun:1 AS base
+WORKDIR /usr/src/app
 
-# Set working directory
-WORKDIR /app
+# Stage for installing dependencies
+FROM base AS install
+RUN mkdir -p /temp/dev
+COPY bun.lockb package.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
 
-# Copy package.json files
-COPY package.json bun.lockb ./
-COPY backend/package.json ./backend
-COPY frontend/package.json ./frontend
+# Install dependencies for the entire workspace
+RUN cd /temp/dev && bun install --frozen-lockfile
 
-RUN ls -la frontend 
+# Production dependencies stage
+FROM base AS production-deps
+RUN mkdir -p /temp/prod
+COPY bun.lockb package.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
 
-# Install dependencies
-RUN bun install --frozen-lockfile
-
-# Copy the rest of the application
-COPY . .
+# Install only production dependencies
+RUN cd /temp/prod && bun install --frozen-lockfile --production
 
 # Build stage
-ENV NODE_ENV=production
-RUN bun run build
+FROM base AS build
+COPY --from=install /temp/dev/node_modules node_modules
+COPY . .
 
-# Set the entrypoint to run pkg-a
-CMD ["bun", "run", "backend/src/index.ts"]
+# Build backend and frontend
+RUN bun run build:backend
+RUN bun run build:frontend
+
+# Final release stage
+FROM base AS release
+# Copy production node_modules
+COPY --from=production-deps /temp/prod/node_modules node_modules
+
+# Copy built artifacts from build stage
+COPY --from=build /usr/src/app/backend/dist ./backend
+COPY --from=build /usr/src/app/frontend/dist ./frontend
+
+# Copy necessary files
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
+
+# Expose the port your app runs on
+EXPOSE 3000
+
+# Run the backend
+USER bun
+ENTRYPOINT ["bun", "run", "backend/src/index.ts"]
