@@ -13,7 +13,7 @@ RUN cd /temp/dev && bun install --frozen-lockfile
 
 # install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
-COPY bun.lockb package.json /temp/prod
+COPY bun.lockb package.json /temp/prod/
 COPY backend/package.json /temp/prod/backend/
 COPY frontend/package.json /temp/prod/frontend/
 RUN cd /temp/prod && bun install --frozen-lockfile --production
@@ -27,18 +27,11 @@ COPY . .
 # build
 RUN bun run build
 
-# Final release stage
+# copy production dependencies and source code into final image
 FROM base AS release
-# Copy production node_modules
-COPY --from=production-deps /temp/prod/node_modules node_modules
-
-# Copy built artifacts from build stage
-COPY --from=build /usr/src/app/backend ./backend
-COPY --from=build /usr/src/app/frontend/dist ./frontend/dist
-
-# Copy necessary files
-COPY backend/package.json ./backend/
-COPY frontend/package.json ./frontend/
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=prerelease /usr/src/app/backend .
+COPY --from=prerelease /usr/src/app/frontend/dist .
 
 # Expose the port your app runs on
 EXPOSE 3000
