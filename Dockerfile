@@ -39,7 +39,7 @@ COPY --from=prerelease /usr/src/app/package.json .
 RUN apt-get update -qq && apt-get install ffmpeg -y
 
 # yt-dlp
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && chmod a+rx ~/.local/bin/yt-dlp
+RUN wget -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && chmod a+rx ~/.local/bin/yt-dlp
 
 # run the app
 # not reccomended to run as root, please run as bun
