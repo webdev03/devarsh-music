@@ -1,6 +1,8 @@
-# Pull the latest updates
-git pull
 # Install dependencies
 bun install
-# Build the frontend and start the backend
+
+# Build the frontend
+bun run build
+
+# Start the backend
 bun run start
