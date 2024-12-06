@@ -1,6 +1,6 @@
 #!/bin/sh
 # Install dependencies
-bun install
+bun install --frozen-lockfile
 
 # Build the frontend
 bun run build
